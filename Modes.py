@@ -20,6 +20,7 @@ class Shop:
             return ""
 
     def add(self, *products):
+
         existing_products = set()
         try:
             with open(self.__file_name, 'r') as file:
@@ -29,16 +30,22 @@ class Shop:
         except FileNotFoundError:
             pass
 
-        with open(self.__file_name, 'a') as file:
-            for product in products:
-                if product.name in existing_products:
-                    print(f"Продукт {product.name} уже есть в магазине")
-                else:
-                    file.write(str(product) + '\n')
-                    existing_products.add(product.name)
+        new_entries = []
+        for product in products:
+            if product.name in existing_products:
+                print(f"Продукт {product.name} уже есть в магазине")
+            else:
+                new_entries.append(str(product))
 
+        if new_entries:
+            with open(self.__file_name, 'a') as file:
+                file.write('\n'.join(new_entries) + '\n')
+
+            for product in products:
+                existing_products.add(product.name)
 
 s1 = Shop()
+
 p1 = Product('Potato', 50.5, 'Vegetables')
 p2 = Product('Spaghetti', 3.4, 'Groceries')
 p3 = Product('Potato', 5.5, 'Vegetables')
@@ -48,3 +55,6 @@ print(p2)
 s1.add(p1, p2, p3)
 
 print(s1.get_products())
+
+
+
